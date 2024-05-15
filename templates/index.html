@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Artificial Intelligence News</title>
+  </head>
+  <body>
+    <h1>Artificial Intelligence News</h1>
+    {% for article in articles %}
+      <div>
+        <h2>{{ article.title }}</h2>
+        <p>{{ article.category }}</p>
+        <p>{{ article.paragraph }}</p>
+        <img src="{{ article.image }}" alt="{{ article.title }}">
+      </div>
+    {% endfor %}
+  </body>
+</html>
