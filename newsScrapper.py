@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route("/category", methods=["GET"])
-def scrape_data(request):
+def scrape_data():
     # Make a request to the webhsite
     url = "https://techcrunch.com/category/artificial-intelligence/"
     response = urlopen(url)
