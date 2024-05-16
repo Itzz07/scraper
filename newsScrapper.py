@@ -52,7 +52,6 @@ def category():
         # Handle other exceptions
         return jsonify({'error': str(e)}), 500
     
-
 @app.route("/latest_news", methods=['GET'])
 def latest_news():
     try:
@@ -70,9 +69,9 @@ def latest_news():
         news_box = box.find_all('div', {'class': 'wp-block-tc23-post-picker', }) 
 
         latest_articles = []
-        for box in news_box[:10]:  # Limit to 10 articles
+        for box in news_box[:9]:  # Limit to 10 articles
             # Extract the text from the element
-            news_catergory_url = box.div.div.a['href']
+            news_category_url = box.div.div.a['href']
             news_category = box.div.div.a.string.strip()
             news_title = box.div.div.h2.a.string
             news_title_url = box.div.div.h2.a['href']
@@ -82,7 +81,7 @@ def latest_news():
             news_image = image_box[0]['src']
 
             latest_articles.append({
-                'news_catergory_url': news_catergory_url,
+                'news_catergory_url': news_category_url,
                 'news_category':   news_category,
                 'news_title':news_title,
                 'news_title_url':  news_title_url, 
@@ -113,7 +112,7 @@ def articles():
 
         article_box = soup.find('div', {'class': 'wp-block-group single-post__content has-global-padding is-layout-constrained wp-block-group-is-layout-constrained', })
 
-        news_catergory_url = article_box.div.div.a['href']
+        news_category_url = article_box.div.div.a['href']
         news_category = article_box.div.div.a.string.strip()
         news_title = article_box.div.div.h1.string
         date_post = article_box.find('div', {'class': 'wp-block-post-date'})
@@ -125,7 +124,7 @@ def articles():
         p = [{'paragraph': para.text.strip()} for para in paragraphs]
 
         data = {
-            'news_catergory_url': news_catergory_url,
+            'news_catergory_url': news_category_url,
             'news_category': news_category,
             'news_title': news_title,
             'news_date': news_date,
