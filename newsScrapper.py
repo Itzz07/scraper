@@ -39,7 +39,7 @@ def scrape_data():
 
     return jsonify(articles)
 
-@app.route("/latest_news", method=['GET'])
+@app.route("/latest_news", methods=['GET'])
 def latest_news():
     # Make a request to the webhsite
     url = "https://techcrunch.com/"
@@ -76,6 +76,7 @@ def latest_news():
         })
 
     return jsonify(latest_articles)
+
 @app.route("/")
 def scrape_website():
     # Make a request to the webhsite
