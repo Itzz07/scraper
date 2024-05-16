@@ -4,7 +4,8 @@ from urllib.request import urlopen as uReq
 from bs4 import BeautifulSoup
 
 # Make a request to the webhsite
-url = "https://techcrunch.com/"
+# url = "https://techcrunch.com/2024/05/16/oh-great-i-feel-safer-already/"
+url = "https://techcrunch.com/2024/05/16/agora-34b-raises-seriesb-carta-real-estate/"
 response = uReq(url)
 page_html = response.read()
 response.close()
@@ -13,24 +14,29 @@ response.close()
 soup = BeautifulSoup(page_html, "html.parser")
 
 # # Find the desired element(s)
-box = soup.find('div', {'class': 'wp-block-group is-layout-flow wp-block-group-is-layout-flow', }) 
-news_box = box.find_all('div', {'class': 'wp-block-tc23-post-picker', }) 
+article_box = soup.find('div', {'class': 'wp-block-group single-post__content has-global-padding is-layout-constrained wp-block-group-is-layout-constrained', }) 
 
-for box in news_box:
+news_catergory_url = article_box.div.div.a['href']
+news_category = article_box.div.div.a.string.strip()
+news_title = article_box.div.div.h1.string
+date_post = article_box.find('div',{'class': 'wp-block-post-date'})
+news_date = date_post.text.strip()
+news_image = article_box.figure.img['src']
+
+paragraphs = article_box.find_all('p', {'class': 'wp-block-paragraph', })
+
+p = [] 
+for paragraph in paragraphs:
     # Extract the text from the element
-    news_catergory_url = box.div.div.a['href']
-    news_category = box.div.div.a.string.strip()
-    news_title = box.div.div.h2.a.string
-    news_title_url = box.div.div.h2.a['href']
-    time_box = box.find_all("div", {"class" : "has-text-color"})
-    news_time = time_box[0].string.strip()
-    image_box = box.find_all("img")
-    news_image = image_box[0]['src']
+    para = paragraph.text
 
-    # print the scrapped data 
-    print('news_catergory_url:\n' + news_catergory_url)
-    print('news_category:\n' + news_category)
-    print('news_title:\n' + news_title)
-    print('news_title_url:\n' + news_title_url)
-    print('news_time:\n' + news_time)
-    print('news_image:\n' + news_image + '\n\n')
+    p.append({'paragraph':para})
+# print the scrapped data 
+p.append({'news_catergory_url' :news_catergory_url,
+'news_category' :news_category,
+'news_title' :news_title,
+'news_date':news_date,
+'news_image':news_image,
+})
+
+print(p)
