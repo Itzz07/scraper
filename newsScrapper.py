@@ -81,7 +81,7 @@ def latest_news():
             news_image = image_box[0]['src']
 
             latest_articles.append({
-                'news_catergory_url': news_category_url,
+                'news_category_url': news_category_url,
                 'news_category':   news_category,
                 'news_title':news_title,
                 'news_title_url':  news_title_url, 
