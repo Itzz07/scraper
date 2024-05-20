@@ -7,12 +7,16 @@ import requests
 
 app = Flask(__name__)
 CORS(app)
+# from flask import request, jsonify
 
 @app.route("/category", methods=["GET"])
 def category():
+    url = request.args.get('url')
+    if not url or url == 'undefined':
+        return jsonify({'error': 'URL is required'}), 400
+
     try:
         # Make a request to the website
-        url = "https://techcrunch.com/category/artificial-intelligence/"
         response = requests.get(url)
         response.raise_for_status()  # Raise an exception for bad status codes
         page_html = response.text
@@ -51,6 +55,49 @@ def category():
     except Exception as e:
         # Handle other exceptions
         return jsonify({'error': str(e)}), 500
+# @app.route("/category", methods=["GET"])
+# def category():
+#     try:
+#         # Make a request to the website
+#         url = "https://techcrunch.com/category/artificial-intelligence/"
+#         response = requests.get(url)
+#         response.raise_for_status()  # Raise an exception for bad status codes
+#         page_html = response.text
+
+#         # Parse the HTML content
+#         soup = BeautifulSoup(page_html, "html.parser")
+
+#         # Find the desired element(s)
+#         article_container = soup.find_all("div", {"class": "wp-block-tc23-post-picker"})
+
+#         articles = []
+#         for container in article_container:
+#             # Extract the text from the element
+#             article_category = container.div.div.a.string.strip()
+#             article_title = container.div.div.h2.a.string
+#             article_title_url = container.div.div.h2.a['href']
+#             paragraph_container = container.find_all("p", {"class" : "wp-block-post-excerpt__excerpt"})
+#             article_paragragh = paragraph_container[0].string if paragraph_container else ""
+#             image_container = container.find_all("img") 
+#             article_image = image_container[0]['src'] if image_container else ""
+
+#             articles.append({
+#                 'category': article_category,
+#                 'title': article_title,
+#                 'title_url': article_title_url,
+#                 'paragraph': article_paragragh,
+#                 'image': article_image
+#             })
+
+#         return jsonify(articles)
+
+#     except requests.exceptions.RequestException as e:
+#         # Handle request errors
+#         return jsonify({'error': str(e)}), 500
+
+#     except Exception as e:
+#         # Handle other exceptions
+#         return jsonify({'error': str(e)}), 500
     
 @app.route("/latest_news", methods=['GET'])
 def latest_news():
@@ -101,7 +148,9 @@ def latest_news():
 
 @app.route("/articles", methods=["GET"])
 def articles():
-    url = "https://techcrunch.com/2024/05/16/agora-34b-raises-seriesb-carta-real-estate/"
+    url = request.args.get('url')
+    if not url or url == 'undefined':
+        return jsonify({'error': 'URL is required'}), 400
 
     try:
         response = requests.get(url)
@@ -124,7 +173,7 @@ def articles():
         p = [{'paragraph': para.text.strip()} for para in paragraphs]
 
         data = {
-            'news_catergory_url': news_category_url,
+            'news_category_url': news_category_url,
             'news_category': news_category,
             'news_title': news_title,
             'news_date': news_date,
